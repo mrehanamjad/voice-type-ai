@@ -13,6 +13,7 @@ interface AppConfig {
   groq_api_key: string; hotkey: string; language: string;
   auto_type: boolean; sound_feedback: boolean;
   typing_delay_ms: number; run_on_startup: boolean;
+  run_in_background: boolean;
 }
 
 /* ─────────── Icons ─────────── */
@@ -165,6 +166,7 @@ function App() {
   const [statusMessage, setStatusMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [lastText, setLastText] = useState<string | null>(null);
+  const [lastError, setLastError] = useState<string | null>(null);
   const [isDark, setIsDark] = useState(() => {
     const s = localStorage.getItem("theme");
     return s ? s === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -181,6 +183,7 @@ function App() {
   const [autoType, setAutoType] = useState(true);
   const [typingDelay, setTypingDelay] = useState(12);
   const [runOnStartup, setRunOnStartup] = useState(false);
+  const [runInBackground, setRunInBackground] = useState(true);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
@@ -193,11 +196,12 @@ function App() {
       setLanguage(cfg.language);
       setAutoType(cfg.auto_type);
       setTypingDelay(cfg.typing_delay_ms);
+      setRunInBackground(cfg.run_in_background);
       try {
         const enabled = await isEnabled();
         setRunOnStartup(enabled);
         if (cfg.run_on_startup !== enabled) {
-          invoke("save_preferences", { language: cfg.language, autoType: cfg.auto_type, soundFeedback: false, typingDelayMs: cfg.typing_delay_ms, runOnStartup: enabled });
+          invoke("save_preferences", { language: cfg.language, autoType: cfg.auto_type, soundFeedback: false, typingDelayMs: cfg.typing_delay_ms, runOnStartup: enabled, runInBackground: cfg.run_in_background });
         }
       } catch { }
     });
@@ -215,7 +219,11 @@ function App() {
       setIsError(error);
       if (s === "done" && !error) {
         const m = message.match(/^(?:Typed|Transcribed): "(.+)"$/);
-        if (m) setLastText(m[1]);
+        if (m) { setLastText(m[1]); setLastError(null); }
+      }
+      if (error) {
+        setLastError(message);
+        setLastText(null);
       }
       if (s === "done" || error) {
         setTimeout(() => { setStage("idle"); setStatusMessage(""); setIsError(false); }, 3000);
@@ -225,8 +233,8 @@ function App() {
   }, []);
 
   const savePrefs = useCallback((overrides: object = {}) => {
-    invoke("save_preferences", { language, autoType, soundFeedback: false, typingDelayMs: typingDelay, runOnStartup, ...overrides });
-  }, [language, autoType, typingDelay, runOnStartup]);
+    invoke("save_preferences", { language, autoType, soundFeedback: false, typingDelayMs: typingDelay, runOnStartup, runInBackground, ...overrides });
+  }, [language, autoType, typingDelay, runOnStartup, runInBackground]);
 
   async function handleSaveApiKey() {
     if (!apiKey.trim()) return;
@@ -366,11 +374,13 @@ function App() {
             <div className="card anim5">
               <div className="card-head">
                 <div className="card-head-left">
-                  <div className="card-icon blue"><TypeIcon /></div>
+                  <div className={`card-icon ${lastError && !lastText ? "red" : "blue"}`}>
+                    {lastError && !lastText ? <XIcon /> : <TypeIcon />}
+                  </div>
                   <span className="card-title">Last Transcription</span>
                 </div>
-                {lastText && (
-                  <button className="btn btn-ghost btn-sm" onClick={() => setLastText(null)}>
+                {(lastText || lastError) && (
+                  <button className="btn btn-ghost btn-sm" onClick={() => { setLastText(null); setLastError(null); }}>
                     Clear
                   </button>
                 )}
@@ -378,13 +388,18 @@ function App() {
               <div className="card-body">
                 {lastText ? (
                   <div className="transcript-content">"{lastText}"</div>
+                ) : lastError ? (
+                  <div className="transcript-error">
+                    <div className="t-err-badge">Error</div>
+                    <span className="t-err-message">{lastError}</span>
+                  </div>
                 ) : (
                   <div className="transcript-empty">
                     <div className="t-empty-icon"><TypeIcon /></div>
                     <span className="t-empty-label">No transcriptions yet — use your hotkey to start</span>
                   </div>
                 )}
-                {statusMessage && !lastText && (
+                {statusMessage && !lastText && !lastError && (
                   <p className={`transcript-status ${isError ? "err" : ""}`}>{statusMessage}</p>
                 )}
               </div>
@@ -483,6 +498,23 @@ function App() {
                         setRunOnStartup(v);
                         try { v ? await enable() : await disable(); savePrefs({ runOnStartup: v }); }
                         catch { setRunOnStartup(!v); }
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Run in background */}
+                <div className="setting-row">
+                  <div className="setting-info">
+                    <div className="setting-label">Run in background</div>
+                    <div className="setting-desc">Minimize to system tray when window is closed</div>
+                  </div>
+                  <div className="setting-control">
+                    <Toggle
+                      checked={runInBackground}
+                      onChange={v => {
+                        setRunInBackground(v);
+                        savePrefs({ runInBackground: v });
                       }}
                     />
                   </div>

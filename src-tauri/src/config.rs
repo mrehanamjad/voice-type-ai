@@ -43,6 +43,10 @@ pub struct AppConfig {
     /// Whether the app should run on system startup
     #[serde(default)]
     pub run_on_startup: bool,
+
+    /// Whether the app should continue running in the background when the main window is closed
+    #[serde(default = "default_true")]
+    pub run_in_background: bool,
 }
 
 fn default_hotkey() -> String {
@@ -71,6 +75,7 @@ impl Default for AppConfig {
             sound_feedback: false,
             typing_delay_ms: default_typing_delay(),
             run_on_startup: false,
+            run_in_background: true,
         }
     }
 }

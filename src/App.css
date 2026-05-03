@@ -29,17 +29,38 @@
   --sidebar-text:         #585550;
   --sidebar-text-muted:   rgba(20,18,14,0.42);
   --sidebar-hover:        rgba(20,18,14,0.04);
-  --sidebar-active-text:  #ea580c;
-  --sidebar-active:       rgba(234,88,12,0.10);
-  --sidebar-active-border:rgba(234,88,12,0.26);
 
-/* BRAND — premium orange */
-  --brand:        #ea580c;   /* main orange */
-  --brand-hover:  #c2410c;   /* darker on hover */
-  --brand-glow:   #fb923c;   /* soft glow */
-  --brand-soft:   rgba(234,88,12,0.10);
+
+  /* ================================================== */
+
+  /* BRAND — premium orange */
+  /* --sidebar-active-text: #ea580c; 
+  --sidebar-active: rgba(234,88,12,0.10); 
+  --sidebar-active-border:rgba(234,88,12,0.26); 
+  --brand: #ea580c;
+  --brand-hover: #c2410c;
+  --brand-glow: #fb923c;
+  --brand-soft: rgba(234,88,12,0.10);
   --brand-soft-2: rgba(234,88,12,0.18);
-  --brand-border: rgba(234,88,12,0.28);
+  --brand-border: rgba(234,88,12,0.28); */
+
+
+
+  /* BRAND — emerald green (premium, fresh) */
+  --sidebar-active-text:  #0d8a5a;
+  --sidebar-active:       rgba(16,185,129,0.10);
+  --sidebar-active-border:rgba(16,185,129,0.22);
+
+  --brand:        #0d8a5a;
+  --brand-hover:  #0a7349;
+  --brand-glow:   #10b981;
+  --brand-soft:   rgba(16,185,129,0.10);
+  --brand-soft-2: rgba(16,185,129,0.18);
+  --brand-border: rgba(16,185,129,0.26);
+
+
+  /* ================================================== */
+
   
   --blue:         #2563eb;
   --blue-soft:    rgba(37,99,235,0.09);
@@ -104,16 +125,33 @@
   --sidebar-text:         rgba(255,255,255,0.62);
   --sidebar-text-muted:   rgba(255,255,255,0.28);
   --sidebar-hover:        rgba(255,255,255,0.05);
-  --sidebar-active-text:  #fb923c;
-  --sidebar-active:       rgba(249,115,22,0.16);
-  --sidebar-active-border:rgba(249,115,22,0.34);
 
-  --brand:        #f97316;
-  --brand-hover:  #fb923c;
-  --brand-glow:   #fb923c;
-  --brand-soft:   rgba(249,115,22,0.16);
+  /* ================================================== */
+
+  /* BRAND — premium orange */
+  /* --sidebar-active-text: #fb923c;
+  --sidebar-active: rgba(249,115,22,0.16);
+  --sidebar-active-border:rgba(249,115,22,0.34);
+  --brand: #f97316;
+  --brand-hover: #fb923c;
+  --brand-glow: #fb923c;
+  --brand-soft: rgba(249,115,22,0.16);
   --brand-soft-2: rgba(249,115,22,0.24);
-  --brand-border: rgba(249,115,22,0.34);
+  --brand-border: rgba(249,115,22,0.34); */
+
+  /* BRAND — emerald green (premium, fresh) */
+  --sidebar-active-text:  #34d399;
+  --sidebar-active:       rgba(16,185,129,0.13);
+  --sidebar-active-border:rgba(16,185,129,0.30);
+  --brand:        #10b981;
+  --brand-hover:  #34d399;
+  --brand-glow:   #34d399;
+  --brand-soft:   rgba(16,185,129,0.14);
+  --brand-soft-2: rgba(16,185,129,0.22);
+  --brand-border: rgba(16,185,129,0.32);
+
+
+  /* ================================================== */
 
   --blue-soft:    rgba(37,99,235,0.14);
   --blue-border:  rgba(37,99,235,0.30);
@@ -674,6 +712,37 @@ button { font-family: inherit; }
 
 .transcript-status { margin-top: 10px; font-size: 12px; color: var(--text3); }
 .transcript-status.err { color: var(--red); }
+
+.transcript-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  background: rgba(239, 68, 68, 0.06);
+  border-radius: var(--r-md);
+  border: 1px solid rgba(239, 68, 68, 0.18);
+  border-left: 3px solid var(--red);
+}
+
+.t-err-badge {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: var(--red);
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin-top: 1px;
+}
+
+.t-err-message {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--red);
+  word-break: break-word;
+}
 
 /* ─────────────────────────────────────────
    SETTINGS ROWS

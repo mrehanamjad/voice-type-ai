@@ -8,6 +8,8 @@ use recorder::AudioRecorder;
 use serde::Serialize;
 use std::sync::Arc;
 use tauri::{Emitter, Manager, WebviewUrl, WebviewWindowBuilder};
+use tauri::tray::{TrayIconBuilder, TrayIconEvent, MouseButton};
+use tauri::menu::{Menu, MenuItem};
 use tauri_plugin_notification::NotificationExt;
 
 /// Payload emitted to the frontend when recording state changes
@@ -115,6 +117,7 @@ fn save_preferences(
     sound_feedback: Option<bool>,
     typing_delay_ms: Option<u32>,
     run_on_startup: Option<bool>,
+    run_in_background: Option<bool>,
     config: tauri::State<'_, Arc<ConfigManager>>,
 ) -> Result<(), String> {
     config.update(|c| {
@@ -132,6 +135,9 @@ fn save_preferences(
         }
         if let Some(ros) = run_on_startup {
             c.run_on_startup = ros;
+        }
+        if let Some(rib) = run_in_background {
+            c.run_in_background = rib;
         }
     })?;
     println!("[config] Preferences updated");
@@ -267,6 +273,7 @@ pub fn run() {
 
     // Initialize persistent config
     let config_manager = Arc::new(ConfigManager::new());
+    let config_manager_clone = Arc::clone(&config_manager);
 
     // Initialize audio recorder with persistent microphone stream.
     // This pre-warms the audio pipeline so hotkey response is instant.
@@ -283,7 +290,55 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .manage(audio_recorder)
         .manage(config_manager)
-        .setup(|app| {
+        .setup(move |app| {
+            // Setup System Tray
+            if let Ok(quit_i) = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>) {
+                if let Ok(show_i) = MenuItem::with_id(app, "show", "Show Window", true, None::<&str>) {
+                    if let Ok(menu) = Menu::with_items(app, &[&show_i, &quit_i]) {
+                        let _ = TrayIconBuilder::new()
+                            .icon(app.default_window_icon().unwrap().clone())
+                            .menu(&menu)
+                            .on_menu_event(|app_handle: &tauri::AppHandle, event| match event.id().as_ref() {
+                                "quit" => {
+                                    app_handle.exit(0);
+                                }
+                                "show" => {
+                                    if let Some(win) = app_handle.get_webview_window("main") {
+                                        let _ = win.show();
+                                        let _ = win.set_focus();
+                                    }
+                                }
+                                _ => {}
+                            })
+                            .on_tray_icon_event(|tray: &tauri::tray::TrayIcon, event| {
+                                if let TrayIconEvent::Click { button, .. } = event {
+                                    if button == MouseButton::Left {
+                                        if let Some(win) = tray.app_handle().get_webview_window("main") {
+                                            let _ = win.show();
+                                            let _ = win.set_focus();
+                                        }
+                                    }
+                                }
+                            })
+                            .build(app);
+                    }
+                }
+            }
+
+            // Intercept main window close event for background mode
+            if let Some(main_window) = app.get_webview_window("main") {
+                let win_clone = main_window.clone();
+                let cfg_clone = Arc::clone(&config_manager_clone);
+                main_window.on_window_event(move |event| {
+                    if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                        if cfg_clone.get().run_in_background {
+                            api.prevent_close();
+                            let _ = win_clone.hide();
+                        }
+                    }
+                });
+            }
+
             // Position the overlay at top-center of the screen
             if let Some(overlay) = app.get_webview_window("overlay") {
                 if let Some(monitor) = overlay.primary_monitor().ok().flatten() {
