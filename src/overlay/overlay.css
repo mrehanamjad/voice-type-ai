@@ -1,11 +1,9 @@
 *, *::before, *::after { box-sizing: border-box; }
-
 html, body {
   background: transparent;
   overflow: hidden;
   margin: 0; padding: 0;
 }
-
 .overlay-container {
   display: flex;
   justify-content: center;
@@ -15,7 +13,6 @@ html, body {
   padding: 12px;
 }
 
-/* From Uiverse.io by Cornerstone-04 */ 
 .loader {
   width: 50px;
   height: 50px;
@@ -23,7 +20,6 @@ html, body {
   z-index: 1;
   transform: translateX(-50%);
 }
-
 .loader::before, 
 .loader::after {
   content: '';
@@ -31,63 +27,47 @@ html, body {
   width: inherit;
   height: inherit;
   border-radius: 50%;
-  mix-blend-mode: multiply; /* Note: If you add a dark background later, change this to 'screen' so it glows! */
+  mix-blend-mode: multiply;
   animation: rotate92523 2s infinite cubic-bezier(0.77, 0, 0.175, 1);
-  transition: background-color 0.4s ease; /* Smooth color transitions */
+  transition: background-color 0.5s ease;
 }
-
 .loader::after {
   animation-delay: 1s;
 }
 
-/* ─────────────────────────────────────────
-   STAGE COLORS
-───────────────────────────────────────── */
+/* 1. Recording: Soft violet/indigo — calm presence, not alarming */
+.stage-recording .loader::before { background-color: #c084fc; }
+.stage-recording .loader::after  { background-color: #818cf8; }
 
-/* 1. Recording: Warm Oranges/Reds */
-.stage-recording .loader::before { background-color: #f59e0b; }
-.stage-recording .loader::after { background-color: #ef4444; }
+/* 2. Transcribing: Muted periwinkle/slate blue */
+.stage-transcribing .loader::before { background-color: #60a5fa; }
+.stage-transcribing .loader::after  { background-color: #a78bfa; }
 
-/* 2. Transcribing: Cool Cyan/Blues */
-.stage-transcribing .loader::before { background-color: #38bdf8; }
-.stage-transcribing .loader::after { background-color: #818cf8; }
+/* 3. Typing: Soft teal/mint — gentle, not neon */
+.stage-typing .loader::before { background-color: #5eead4; }
+.stage-typing .loader::after  { background-color: #6ee7b7; }
 
-/* 3. Typing: Emerald Greens */
-.stage-typing .loader::before { background-color: #34d399; }
-.stage-typing .loader::after { background-color: #10b981; }
-
-/* 4. Done: Snap together into a solid Green resolving dot */
+/* 4. Done: Muted teal resolving dot */
 .stage-done .loader::before,
 .stage-done .loader::after { 
-  background-color: #10b981; 
+  background-color: #2dd4bf; 
   animation: none; 
   left: 17.5px; 
   transform: scale(1);
 }
 
-/* 5. Error: Snap together into a solid Red error dot */
+/* 5. Error: Soft rose — communicates error without harshness */
 .stage-error .loader::before,
 .stage-error .loader::after { 
-  background-color: #ef4444; 
+  background-color: #f87171; 
   animation: none; 
   left: 17.5px; 
   transform: scale(1);
 }
 
 @keyframes rotate92523 {
-  0%, 100% {
-    left: 35px;
-  }
-
-  25% {
-    transform: scale(.3);
-  }
-
-  50% {
-    left: 0%;
-  }
-
-  75% {
-    transform: scale(1);
-  }
+  0%, 100% { left: 35px; }
+  25%       { transform: scale(.3); }
+  50%       { left: 0%; }
+  75%       { transform: scale(1); }
 }

@@ -293,7 +293,7 @@ pub fn run() {
         .setup(move |app| {
             // Setup System Tray
             if let Ok(quit_i) = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>) {
-                if let Ok(show_i) = MenuItem::with_id(app, "show", "Show Window", true, None::<&str>) {
+                if let Ok(show_i) = MenuItem::with_id(app, "show", "Open App", true, None::<&str>) {
                     if let Ok(menu) = Menu::with_items(app, &[&show_i, &quit_i]) {
                         let _ = TrayIconBuilder::new()
                             .icon(app.default_window_icon().unwrap().clone())

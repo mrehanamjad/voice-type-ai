@@ -1,16 +1,16 @@
 //! Persistent configuration system.
 //!
 //! Stores app settings as a JSON file in the platform-appropriate config directory:
-//! - Linux:   ~/.config/voice-type-ai/config.json
-//! - Windows: C:\Users\<user>\AppData\Roaming\voice-type-ai\config.json
-//! - macOS:   ~/Library/Application Support/voice-type-ai/config.json
+//! - Linux:   ~/.config/typevoice/config.json
+//! - Windows: C:\Users\<user>\AppData\Roaming\typevoice\config.json
+//! - macOS:   ~/Library/Application Support/typevoice/config.json
 
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
 use std::sync::Mutex;
 
-const APP_DIR_NAME: &str = "voice-type-ai";
+const APP_DIR_NAME: &str = "typevoice";
 const CONFIG_FILE_NAME: &str = "config.json";
 
 /// Application configuration — serialized to/from JSON

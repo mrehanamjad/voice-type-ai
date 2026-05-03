@@ -1,10 +1,14 @@
 use tauri::{AppHandle, Manager};
-use tauri::tray::{TrayIconBuilder, TrayIconEvent, MouseButton};
-use tauri::menu::{Menu, MenuItem};
+
 fn test(app: &AppHandle) {
-    let _ = TrayIconBuilder::new().on_tray_icon_event(|_, e| {
-        if let TrayIconEvent::Click { button, .. } = e {
-            if button == MouseButton::Left {}
+    if let Some(tray) = app.tray_by_id("main_tray") {
+        if let Some(menu) = tray.menu() {
+            if let Some(item) = menu.get("toggle_record") {
+                let _ = item.as_menuitem().unwrap().set_text("test");
+            }
+            if let Some(item) = menu.get("toggle_bg") {
+                let _ = item.as_check_menuitem().unwrap().set_checked(true);
+            }
         }
-    });
+    }
 }

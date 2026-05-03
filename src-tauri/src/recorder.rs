@@ -210,7 +210,7 @@ impl AudioRecorder {
             .unwrap()
             .as_millis();
         let file_path = temp_dir
-            .join(format!("voice_type_ai_{}.wav", timestamp))
+            .join(format!("typevoice_{}.wav", timestamp))
             .to_string_lossy()
             .to_string();
 

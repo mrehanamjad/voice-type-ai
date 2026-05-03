@@ -47,7 +47,7 @@
 
 
   /* BRAND — emerald green (premium, fresh) */
-  --sidebar-active-text:  #0d8a5a;
+  /* --sidebar-active-text:  #0d8a5a;
   --sidebar-active:       rgba(16,185,129,0.10);
   --sidebar-active-border:rgba(16,185,129,0.22);
 
@@ -56,7 +56,17 @@
   --brand-glow:   #10b981;
   --brand-soft:   rgba(16,185,129,0.10);
   --brand-soft-2: rgba(16,185,129,0.18);
-  --brand-border: rgba(16,185,129,0.26);
+  --brand-border: rgba(16,185,129,0.26); */
+
+--sidebar-active-text:   #7c3aed;
+--sidebar-active:        rgba(124,58,237,0.10);
+--sidebar-active-border: rgba(124,58,237,0.22);
+--brand:        #7c3aed;
+--brand-hover:  #6d28d9;
+--brand-glow:   #8b5cf6;
+--brand-soft:   rgba(124,58,237,0.10);
+--brand-soft-2: rgba(124,58,237,0.18);
+--brand-border: rgba(124,58,237,0.26);
 
 
   /* ================================================== */
@@ -140,7 +150,7 @@
   --brand-border: rgba(249,115,22,0.34); */
 
   /* BRAND — emerald green (premium, fresh) */
-  --sidebar-active-text:  #34d399;
+  /* --sidebar-active-text:  #34d399;
   --sidebar-active:       rgba(16,185,129,0.13);
   --sidebar-active-border:rgba(16,185,129,0.30);
   --brand:        #10b981;
@@ -148,7 +158,17 @@
   --brand-glow:   #34d399;
   --brand-soft:   rgba(16,185,129,0.14);
   --brand-soft-2: rgba(16,185,129,0.22);
-  --brand-border: rgba(16,185,129,0.32);
+  --brand-border: rgba(16,185,129,0.32); */
+
+--sidebar-active-text:   #a78bfa;
+--sidebar-active:        rgba(124,58,237,0.13);
+--sidebar-active-border: rgba(124,58,237,0.30);
+--brand:        #8b5cf6;
+--brand-hover:  #a78bfa;
+--brand-glow:   #a78bfa;
+--brand-soft:   rgba(124,58,237,0.14);
+--brand-soft-2: rgba(124,58,237,0.22);
+--brand-border: rgba(124,58,237,0.32);
 
 
   /* ================================================== */

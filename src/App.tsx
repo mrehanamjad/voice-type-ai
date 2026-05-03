@@ -271,7 +271,7 @@ function App() {
           <div className="app-logo-mark">
             <MicIcon />
           </div>
-          <span className="app-name">VoiceType</span>
+          <span className="app-name">TypeVoice</span>
         </div>
 
         <nav className="sidebar-nav">
@@ -580,7 +580,7 @@ function App() {
             <div className="card-head">
               <div className="card-head-left">
                 <div className="card-icon brand"><InfoIcon /></div>
-                <span className="card-title">About VoiceType</span>
+                <span className="card-title">About TypeVoice</span>
               </div>
             </div>
             <div className="card-body">
@@ -589,7 +589,7 @@ function App() {
                   <div style={{ width: 22, height: 22 }}><MicIcon /></div>
                 </div>
                 <div>
-                  <div className="about-hero-title">VoiceType AI</div>
+                  <div className="about-hero-title">TypeVoice</div>
                   <div className="about-hero-sub">Voice-to-text for your desktop</div>
                 </div>
               </div>

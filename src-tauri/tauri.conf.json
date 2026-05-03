@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "voice-type-ai",
+  "productName": "TypeVoice",
   "version": "0.1.0",
-  "identifier": "com.rehan.voice-type-ai",
+  "identifier": "com.rehan.typevoice",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -13,10 +13,10 @@
     "windows": [
       {
         "label": "main",
-        "title": "Voice Type AI",
+        "title": "TypeVoice",
         "width": 840,
         "height": 640,
-        "transparent": true,
+        "transparent": false,
         "scrollBarStyle": "default",
         "preventOverflow": false,
         "decorations": true
