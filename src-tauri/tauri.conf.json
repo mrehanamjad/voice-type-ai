@@ -14,8 +14,12 @@
       {
         "label": "main",
         "title": "Voice Type AI",
-        "width": 480,
-        "height": 640
+        "width": 840,
+        "height": 640,
+        "transparent": true,
+        "scrollBarStyle": "default",
+        "preventOverflow": false,
+        "decorations": true
       },
       {
         "label": "overlay",

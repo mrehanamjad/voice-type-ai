@@ -8,6 +8,7 @@ use recorder::AudioRecorder;
 use serde::Serialize;
 use std::sync::Arc;
 use tauri::{Emitter, Manager, WebviewUrl, WebviewWindowBuilder};
+use tauri_plugin_notification::NotificationExt;
 
 /// Payload emitted to the frontend when recording state changes
 #[derive(Clone, Serialize)]
@@ -155,6 +156,75 @@ fn emit_status(app: &tauri::AppHandle, stage: &str, message: &str, error: bool) 
             error,
         },
     );
+    // Also fire OS system notification on error
+    if error {
+        send_notification(app, "Voice Typing Error", message);
+    }
+}
+
+
+fn send_notification(app: &tauri::AppHandle, title: &str, body: &str) {
+    println!("[notification] {} — {}", title, body);
+
+    let mut success = false;
+
+    // ─────────────────────────────────────────────
+    // Windows + macOS (Tauri native notifications)
+    // ─────────────────────────────────────────────
+    #[cfg(any(target_os = "windows", target_os = "macos"))]
+    {
+        let result = app
+            .notification()
+            .builder()
+            .title(title)
+            .body(body)
+            .show();
+
+        match result {
+            Ok(_) => {
+                println!("[notification] Tauri notification sent");
+                success = true;
+            }
+            Err(e) => {
+                eprintln!("[notification] Tauri failed: {}", e);
+            }
+        }
+    }
+
+    // ─────────────────────────────────────────────
+    // Linux fallback (most reliable layer)
+    // ─────────────────────────────────────────────
+    #[cfg(target_os = "linux")]
+    {
+        use std::process::Command;
+
+        let result = Command::new("notify-send")
+            .arg(title)
+            .arg(body)
+            .arg("-u")
+            .arg("critical")
+            .spawn();
+
+        match result {
+            Ok(_) => {
+                println!("[notification] Linux notify-send executed");
+                success = true;
+            }
+            Err(e) => {
+                eprintln!("[notification] notify-send failed: {}", e);
+            }
+        }
+    }
+
+    // ─────────────────────────────────────────────
+    // Final fallback log (useful for debugging)
+    // ─────────────────────────────────────────────
+    if !success {
+        eprintln!(
+            "[notification] ALL METHODS FAILED → {}: {}",
+            title, body
+        );
+    }
 }
 
 /// Show the overlay window (creates it if it doesn't exist)
@@ -205,6 +275,7 @@ pub fn run() {
     );
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_autostart::init(
             tauri_plugin_autostart::MacosLauncher::LaunchAgent,
             Some(vec!["--minimized"]), // pass minimized flag so it can start silently
